@@ -57,8 +57,7 @@ def extract_keywords(text, top_n=10):
 def generate_quiz(text, num_questions=5):
     keywords = extract_keywords(text, top_n=20)
     sentences = re.split(r'(?<=[.!?]) +', text)
-    sentences = [s.strip() for s in sentences if len(s.strip()) > 10]
-
+    sentences = [s.strip() for s in sentences if len(s.strip()) > 10]  # ← Loosened filter
 
     quiz = []
     used_keywords = set()
@@ -90,14 +89,15 @@ def generate_quiz(text, num_questions=5):
 
         used_keywords.add(kw)
 
+    if not quiz:
+        quiz.append({
+            "question": "⚠️ No valid quiz content could be generated.",
+            "options": ["Retry", "Use PDF", "Try DOCX", "OK"],
+            "answer": "OK"
+        })
+
     return quiz
 
-if not quiz:
-    quiz.append({
-        "question": "No good content found to generate quiz. Try uploading a richer document.",
-        "options": ["Retry", "Use PDF", "Try DOCX", "OK"],
-        "answer": "OK"
-    })
 
 
 def evaluate_answers(quiz, user_answers):
