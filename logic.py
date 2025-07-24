@@ -56,13 +56,12 @@ def extract_keywords(text, top_n=10):
     
 def generate_quiz(text, num_questions=5):
     keywords = extract_keywords(text, top_n=20)
-    print("📌 Extracted Keywords:", keywords)
-    print("📄 Sentence count:", len(sentences))
+    st.write("📌 Extracted Keywords:", keywords)
 
     sentences = re.split(r'(?<=[.!?]) +', text)
     sentences = [s.strip() for s in sentences if len(s.strip()) > 3]
+    st.write("📄 Sentence count:", len(sentences))  # ✅ Now `sentences` is defined!
  
-
     quiz = []
     used_keywords = set()
 
