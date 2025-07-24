@@ -14,7 +14,8 @@ if "quiz" not in st.session_state:
     st.session_state.summary = ""
     st.session_state.ideas = []
 
-uploaded_file = st.file_uploader("📤 Upload your document", type=["pdf", "docx", "txt"])
+uploaded_file = st.file_uploader("📤 Upload your document", type=["pdf", "docx", "txt", "pptx"])
+
 num_questions = st.slider("📝 Number of quiz questions", 3, 10, 5)
 
 if uploaded_file:
