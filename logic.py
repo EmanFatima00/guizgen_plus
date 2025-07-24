@@ -47,9 +47,18 @@ def brainstorm_ideas(text, top_n=10):
     freq = Counter(words)
     return [w for w, _ in freq.most_common(top_n)]
 
-def extract_keywords(text, top_n=10):
-    words = re.findall(r'\\b[a-zA-Z]{5,}\\b', text.lower())
-    stopwords = set([...])  # a big set of English stopwords
+def extract_keywords(text, top_n=20):
+    # Accept shorter keywords (≥3 chars)
+    words = re.findall(r'\b[a-zA-Z]{3,}\b', text.lower())
+
+    stopwords = set([
+        "the", "and", "for", "are", "but", "not", "you", "that", "this", "with", "from", "have", "your",
+        "can", "was", "use", "will", "has", "all", "any", "our", "out", "who", "get", "how", "why", "when",
+        "had", "what", "where", "which", "into", "about", "also", "other", "more", "than", "then", "them",
+        "they", "their", "these", "those", "his", "her", "him", "she", "himself", "herself", "my", "mine"
+    ])
+
+    # Filter out common stopwords
     words = [w for w in words if w not in stopwords]
     freq = Counter(words)
     return [w for w, _ in freq.most_common(top_n)]
