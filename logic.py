@@ -53,15 +53,19 @@ def extract_keywords(text, top_n=10):
     words = [w for w in words if w not in stopwords]
     freq = Counter(words)
     return [w for w, _ in freq.most_common(top_n)]
-    
+
 def generate_quiz(text, num_questions=5):
+    import streamlit as st
+    import random
+    import re
+
     keywords = extract_keywords(text, top_n=20)
     st.write("📌 Extracted Keywords:", keywords)
 
     sentences = re.split(r'(?<=[.!?]) +', text)
-    sentences = [s.strip() for s in sentences if len(s.strip()) > 3]
-    st.write("📄 Sentence count:", len(sentences))  # ✅ Now `sentences` is defined!
- 
+    sentences = [s.strip() for s in sentences if len(s.strip()) > 10]
+    st.write("📄 Sentence count:", len(sentences))
+
     quiz = []
     used_keywords = set()
 
@@ -78,7 +82,7 @@ def generate_quiz(text, num_questions=5):
         correct = random.choice(related_sentences)
         distractors = random.sample(
             [s for s in sentences if s not in related_sentences],
-            k=min(3, len(sentences)-1)
+            k=min(3, len(sentences) - 1)
         )
 
         question = f"What best describes '{kw}' in the context of this document?"
@@ -94,14 +98,12 @@ def generate_quiz(text, num_questions=5):
 
     if not quiz:
         quiz.append({
-            "question": "⚠️ No valid quiz content could be generated.",
-            "options": ["Retry", "Use PDF", "Try DOCX", "OK"],
+            "question": "⚠️ No quiz could be generated from this file. Try using a file with more full sentences.",
+            "options": ["OK", "Retry", "Use PDF", "Exit"],
             "answer": "OK"
         })
 
     return quiz
-
-
 
 def evaluate_answers(quiz, user_answers):
     score = 0
