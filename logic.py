@@ -31,56 +31,46 @@ def brainstorm_ideas(text, top_n=10):
     return [w for w, _ in freq.most_common(top_n)]
 
 def extract_keywords(text, top_n=10):
-    words = re.findall(r'\b[a-zA-Z]{5,}\b', text.lower())
-    stopwords = set([
-        "about", "above", "after", "again", "against", "all", "among", "an", "and",
-        "any", "are", "as", "at", "be", "because", "been", "before", "being", "below",
-        "between", "both", "but", "by", "could", "did", "do", "does", "doing", "down",
-        "during", "each", "few", "for", "from", "further", "had", "has", "have", "having",
-        "he", "her", "here", "hers", "herself", "him", "himself", "his", "how", "i",
-        "if", "in", "into", "is", "it", "its", "itself", "me", "more", "most", "my",
-        "myself", "no", "nor", "not", "of", "off", "on", "once", "only", "or", "other",
-        "ought", "our", "ours", "ourselves", "out", "over", "own", "same", "she", "should",
-        "so", "some", "such", "than", "that", "the", "their", "theirs", "them", "themselves",
-        "then", "there", "these", "they", "this", "those", "through", "to", "too", "under",
-        "until", "up", "very", "was", "we", "were", "what", "when", "where", "which", "while",
-        "who", "whom", "why", "with", "would", "you", "your", "yours", "yourself", "yourselves"
-    ])
+    words = re.findall(r'\\b[a-zA-Z]{5,}\\b', text.lower())
+    stopwords = set([...])  # a big set of English stopwords
     words = [w for w in words if w not in stopwords]
     freq = Counter(words)
     return [w for w, _ in freq.most_common(top_n)]
-
+    
 def generate_quiz(text, num_questions=5):
     keywords = extract_keywords(text, top_n=20)
     sentences = re.split(r'(?<=[.!?]) +', text)
     sentences = [s.strip() for s in sentences if len(s.strip()) > 30]
 
     quiz = []
-    for i in range(min(num_questions, len(keywords))):
-        keyword = keywords[i]
-        question = f"What is the meaning or role of '{keyword}' in this context?"
-        correct_sentence = next((s for s in sentences if keyword in s.lower()), None)
-        if not correct_sentence:
+    used_keywords = set()
+
+    for kw in keywords:
+        if len(quiz) >= num_questions:
+            break
+        if kw in used_keywords:
             continue
 
-        # Generate wrong options from other keyword-based sentences
-        wrongs = []
-        for k in keywords:
-            if k != keyword:
-                sentence = next((s for s in sentences if k in s.lower()), None)
-                if sentence and sentence != correct_sentence:
-                    wrongs.append(sentence)
-            if len(wrongs) >= 3:
-                break
+        related_sentences = [s for s in sentences if kw.lower() in s.lower()]
+        if not related_sentences:
+            continue
 
-        options = [correct_sentence] + wrongs[:3]
-        random.shuffle(options)
+        correct = random.choice(related_sentences)
+        distractors = random.sample(
+            [s for s in sentences if s not in related_sentences],
+            k=min(3, len(sentences)-1)
+        )
+
+        question = f"What best describes '{kw}' in the context of this document?"
+        options = random.sample([correct] + distractors, len(distractors) + 1)
 
         quiz.append({
             "question": question,
             "options": options,
-            "answer": correct_sentence
+            "answer": correct
         })
+
+        used_keywords.add(kw)
 
     return quiz
 
