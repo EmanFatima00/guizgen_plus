@@ -13,10 +13,3 @@ QuizGen+ lets you:
 pip install -r requirements.txt
 streamlit run app.py
 ```
-
-## ☁️ Deploy on Streamlit Cloud
-
-1. Push to GitHub
-2. Go to https://streamlit.io/cloud
-3. Create new app & select `app.py`
-4. You're live! 🚀
