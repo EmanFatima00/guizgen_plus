@@ -6,18 +6,35 @@ from collections import Counter
 
 def parse_file(uploaded_file):
     ext = uploaded_file.name.split('.')[-1]
+    
     if ext == 'pdf':
+        import fitz  # PyMuPDF
         text = ""
         with fitz.open(stream=uploaded_file.read(), filetype="pdf") as doc:
             for page in doc:
                 text += page.get_text()
         return text
+
     elif ext == 'docx':
+        import docx
         doc = docx.Document(uploaded_file)
         return "\n".join([p.text for p in doc.paragraphs])
+
     elif ext == 'txt':
         return uploaded_file.read().decode('utf-8')
+
+    elif ext == 'pptx':
+        from pptx import Presentation
+        prs = Presentation(uploaded_file)
+        text = ""
+        for slide in prs.slides:
+            for shape in slide.shapes:
+                if hasattr(shape, "text"):
+                    text += shape.text + "\n"
+        return text
+
     return ""
+
 
 def summarize_text(text, sentence_count=5):
     sentences = re.split(r'(?<=[.!?]) +', text)
