@@ -22,8 +22,8 @@ if uploaded_file:
     raw_text = parse_file(uploaded_file)
     st.session_state.raw_text = raw_text
     # ✅ Show preview of extracted text
-st.subheader("🧾 Extracted Text Preview")
-st.write(st.session_state.raw_text[:1500])
+    st.subheader("🧾 Extracted Text Preview")
+    st.write(st.session_state.raw_text[:1500])
 
 
     col1, col2, col3 = st.columns(3)
