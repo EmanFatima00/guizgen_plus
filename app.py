@@ -69,8 +69,8 @@ if uploaded_file:
            st.session_state.user_answers = []
            st.session_state.show_results = False
            st.rerun()
-       else:
-          st.warning("⚠️ Please upload a document before retaking the quiz.")
+        else:
+            st.warning("⚠️ Please upload a document before retaking the quiz.")
 
     st.subheader("📜 Quiz History")
     for row in get_history():
