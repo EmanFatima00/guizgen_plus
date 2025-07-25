@@ -60,11 +60,11 @@ if uploaded_file:
             for i, res in enumerate(results):
                 st.write(f"✅ Q{i+1} Correct Answer: {res}")
 
-    if st.button("🔁 Retake Quiz"):
-    if st.session_state.get("raw_text"):
-        st.session_state.quiz = generate_quiz(
-            st.session_state.raw_text,
-            st.session_state.get("num_questions", 5)
+       if st.button("🔁 Retake Quiz"):
+       if st.session_state.get("raw_text"):
+          st.session_state.quiz = generate_quiz(
+              st.session_state.raw_text,
+              st.session_state.get("num_questions", 5)
         )
         st.session_state.user_answers = []
         st.session_state.show_results = False
